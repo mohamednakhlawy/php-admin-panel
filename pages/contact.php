@@ -2,19 +2,21 @@
 $Errors = "";
 if(isset($_POST['submit'])){
 	$subject = 'Mail from contact from';
-	$headers = 'From: '.$_POST['email'];
+	$headers = 'From: '. $_POST['email'] . "\r\n" .
+    'Reply-To: '. $_POST['email'] . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
 
 	if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
 	  $Errors = $_POST['email']." is not a valid email address";
 	}
 
-	if(empty($_POST['message']) || empty($_POST['message']) || empty($_POST['message'])){
+	if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['message'])){
 		$Errors = " All Fields is required";
 	}
 
 	if(empty($Errors)){
 		$Errors = "success";
-		if(!mail($config['contact_email'], $subject, "name: ".$_POST['message']." \n message: ".$_POST['message'], $headers)){
+		if(!mail($config['contact_email'], $subject, "name: ".$_POST['name']." -  message: ".$_POST['message'], $headers)){
 			$Errors = "Error";
 		}
 	}
